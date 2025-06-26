@@ -38,6 +38,14 @@ def pick(paragraphs, select, k):
     """
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    total=-1
+    for element in paragraphs:
+        if select(element):
+            total+=1
+            if total==k:
+                return element
+    return ''
+        
     # END PROBLEM 1
 
 
@@ -58,7 +66,17 @@ def about(subject):
 
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    
+    def is_in(target):
+        t=split(remove_punctuation(target))
+        for x in t:
+            if lower(x) in subject:
+                return True
+        return False
+    return is_in
     # END PROBLEM 2
+    
+    
 
 
 def accuracy(typed, source):
@@ -88,6 +106,18 @@ def accuracy(typed, source):
     source_words = split(source)
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    if len(typed_words)==0:
+        if len(source_words)==0:
+            return 100.0
+        else:
+            return 0.0
+    else: 
+        auc=0
+        for i in range(min(len(typed_words),len(source_words))):
+            if typed_words[i]==source_words[i]:
+                auc+=1
+        return auc/len(typed_words)*100
+    
     # END PROBLEM 3
 
 
@@ -106,6 +136,9 @@ def wpm(typed, elapsed):
     assert elapsed > 0, "Elapsed time must be positive"
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    l=len(typed)
+    return l/elapsed*12
+   
     # END PROBLEM 4
 
 
@@ -132,20 +165,30 @@ def memo(f):
 def memo_diff(diff_function):
     """A memoization function."""
     cache = {}
-
     def memoized(typed, source, limit):
         # BEGIN PROBLEM EC
         "*** YOUR CODE HERE ***"
+        if (typed,source) in cache:
+            if cache[(typed,source)][1]>=limit:
+                return cache[(typed,source)][0]
+            else:
+                t=diff_function(typed,source,limit)
+                cache[(typed,source)]=(t,limit)
+                return t
+        else:
+            t=diff_function(typed,source,limit)
+            cache[(typed,source)]=(t,limit)
+            return t
         # END PROBLEM EC
-
     return memoized
+    
 
 
 ###########
 # Phase 2 #
 ###########
 
-
+@memo
 def autocorrect(typed_word, word_list, diff_function, limit):
     """Returns the element of WORD_LIST that has the smallest difference
     from TYPED_WORD based on DIFF_FUNCTION. If multiple words are tied for the smallest difference,
@@ -167,6 +210,11 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    i=min(range(len(word_list)),key=lambda u:diff_function(typed_word,word_list[u],limit))
+    if diff_function(typed_word,word_list[i],limit)>limit or typed_word in word_list :
+        return typed_word
+    else:
+        return word_list[i]
     # END PROBLEM 5
 
 
@@ -193,10 +241,27 @@ def furry_fixes(typed, source, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    
+    def count(i,j,cur):
+        if cur>limit:
+            return cur
+        if i==len(typed) or j==len(source):
+            return abs(len(typed)-len(source))
+        else:
+            if typed[i]==source[j]:
+                r= count(i+1,j+1,cur)
+                return r
+            else:
+                r= count(i+1,j+1,cur+1)+1
+                return r
+    return count(0,0,0)
+    
+    
+        
+    
     # END PROBLEM 6
 
-
+@memo_diff
 def minimum_mewtations(typed, source, limit):
     """A diff function for autocorrect that computes the edit distance from TYPED to SOURCE.
     This function takes in a string TYPED, a string SOURCE, and a number LIMIT.
@@ -214,22 +279,28 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-    if ___________: # Base cases should go here, you may add more base cases as needed.
+    if limit <0:
+        return 1e9
+    if limit==0 and typed!=source:
+        return 1e9
+    elif len(typed)==0 or len(source)==0: # Base cases should go here, you may add more base cases as needed.
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return len(source)+len(typed)
         # END
     # Recursive cases should go below here
-    if ___________: # Feel free to remove or add additional cases
+    if typed[0]==source[0]: # Feel free to remove or add additional cases
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return minimum_mewtations(typed[1:],source[1:],limit)
         # END
     else:
-        add = ... # Fill in these lines
-        remove = ...
-        substitute = ...
+        add = 1+minimum_mewtations(typed[1:],source,limit-1) # Fill in these lines
+        remove = 1+minimum_mewtations(typed,source[1:],limit-1)
+        substitute = 1+minimum_mewtations(typed[1:],source[1:],limit-1)
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return min(add,remove,substitute)
         # END
 
 
@@ -276,6 +347,16 @@ def report_progress(typed, source, user_id, upload):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    auc=0
+    for i in range(len(typed)):
+        if typed[i]==source[i]:
+            auc+=1
+        else:
+            break
+    ratio=auc/len(source)
+    upload({'id':user_id,'progress':ratio})
+    print(ratio)
+        
     # END PROBLEM 8
 
 
@@ -300,6 +381,9 @@ def time_per_word(words, timestamps_per_player):
     tpp = timestamps_per_player  # A shorter name (for convenience)
     # BEGIN PROBLEM 9
     times = []  # You may remove this line
+    for element in tpp:
+        t=[ element[i]-element[i-1] for i in range(1,len(element))]
+        times+=[t]
     # END PROBLEM 9
     return {'words': words, 'times': times}
 
@@ -327,6 +411,19 @@ def fastest_words(words_and_times):
     word_indices = range(len(words))    # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    fast=[[] for i in player_indices]
+    for i in word_indices:
+        min=1e9
+        mm=-1
+        for j in player_indices:
+            if get_time(times,j,i)<min:
+                min=get_time(times,j,i)
+                mm=j
+        fast[mm]+=[words[i]]
+    return fast
+                
+        
+    
     # END PROBLEM 10
 
 
