@@ -7,7 +7,7 @@ def divide(quotients, divisors):
     >>> divide(range(1, 5), range(20, 25))
     {1: [20, 21, 22, 23, 24], 2: [20, 22, 24], 3: [21, 24], 4: [20, 24]}
     """
-    return {____: ____ for ____ in ____}
+    return {i: [y for y in divisors if y %i==0] for i in quotients}
 
 
 def buy(fruits_to_buy, prices, total_amount):
@@ -29,10 +29,10 @@ def buy(fruits_to_buy, prices, total_amount):
             print(cart)
         elif fruits and amount > 0:
             fruit = fruits[0]
-            price = ____
-            for k in ____:
+            price = prices[fruit]
+            for k in range(1,amount//price+1):
                 # Hint: The display function will help you add fruit to the cart.
-                add(____, ____, ____)
+                add(fruits[1:], amount-k*price, cart+display(fruit,k))
     add(fruits_to_buy, total_amount, '')
 
 
@@ -52,8 +52,6 @@ def display(fruit, count):
     return '[' + str(count) + ' ' + fruit + ']'
 
 
-
-
 from math import sqrt
 def distance(city_a, city_b):
     """
@@ -67,6 +65,9 @@ def distance(city_a, city_b):
     5.0
     """
     "*** YOUR CODE HERE ***"
+    dlat=abs(get_lat(city_a)-get_lat(city_b))
+    dlon=abs(get_lon(city_a)-get_lon(city_b))
+    return sqrt(dlat**2+dlon**2)
 
 def closer_city(lat, lon, city_a, city_b):
     """
@@ -84,6 +85,17 @@ def closer_city(lat, lon, city_a, city_b):
     'Bucharest'
     """
     "*** YOUR CODE HERE ***"
+    dlat1=abs(get_lat(city_a)-lat)
+    dlon1=abs(get_lon(city_a)-lon)
+    d1=sqrt(dlat1**2+dlon1**2)
+    dlat2=abs(get_lat(city_b)-lat)
+    dlon2=abs(get_lon(city_b)-lon)
+    d2=sqrt(dlat2**2+dlon2**2)
+    if(d1<d2):
+        return get_name(city_a)
+    else:
+        return get_name(city_b)
+    
 
 def check_city_abstraction():
     """
@@ -160,7 +172,6 @@ def get_lon(city):
 
 ###############
 
-
 def change_abstraction(change):
     """
     For testing purposes.
@@ -169,6 +180,5 @@ def change_abstraction(change):
     True
     """
     change_abstraction.changed = change
-
 change_abstraction.changed = False
 
