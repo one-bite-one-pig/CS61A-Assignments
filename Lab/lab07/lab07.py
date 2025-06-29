@@ -142,12 +142,22 @@ def duplicate_link(s, val):
     Link(1, Link(2, Link(2, Link(2, Link(2, Link(3))))))
     """
     "*** YOUR CODE HERE ***"
-    if s!=Link.empty:
+    def helper(s,val):
+        if s!=Link.empty:
+            if s.first==val:
+                return Link(s.first,Link(s.first,helper(s.rest,val)))
+            else:
+                return Link(s.first,helper(s.rest,val))
+    s=helper(s,val)
+    
+    
+    
+    """if s!=Link.empty:
         if s.first==val:
             duplicate_link(s.rest,val)
             s.rest=Link(s.first,s.rest)
         else:
-            duplicate_link(s.rest,val)
+            duplicate_link(s.rest,val)"""
         
    
 
