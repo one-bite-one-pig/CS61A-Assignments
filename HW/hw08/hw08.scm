@@ -49,12 +49,6 @@
         (
             cons  (car s)  (no-repeats (filter  (lambda(x) (not (= x (car s)))  )  (cdr s)    ))
         )
-
-
-
-
-
-
     ) 
 
 
