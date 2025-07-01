@@ -15,12 +15,7 @@
 
 (
     define (my-filter pred s) (
-        cond ((null? s)  nil)
-             ((null? (cdr s))(
-                if (pred (car s))
-                    s
-                    nil
-             ))
+        cond ((null? s)  nil)     
             (else(
                 if(pred (car s))
                     (cons ( car s)  (my-filter pred (cdr s)))

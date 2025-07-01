@@ -14,6 +14,9 @@ test = {
           'multiline': False
         },
         {
+          
+          
+          
           'code': r"""
           >>> take_turn(3, 15, 9, make_test_dice(4, 6, 1))
           1
