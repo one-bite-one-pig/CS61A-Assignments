@@ -34,6 +34,17 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     else:
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
+        operator=scheme_eval(first,env)
+        def helper(expr):
+            return scheme_eval(expr,env)
+        
+        operands=rest.map(helper)
+        
+        return scheme_apply(operator,operands,env)
+        
+        
+        
+        
         # END PROBLEM 3
 
 def scheme_apply(procedure, args, env):
@@ -44,21 +55,35 @@ def scheme_apply(procedure, args, env):
        assert False, "Not a Frame: {}".format(env)
     if isinstance(procedure, BuiltinProcedure):
         # BEGIN PROBLEM 2
+        f=args
+        l=[]
+        while f:
+            l.append(f.first)
+            f=f.rest
         "*** YOUR CODE HERE ***"
         # END PROBLEM 2
         try:
             # BEGIN PROBLEM 2
             "*** YOUR CODE HERE ***"
+            if procedure.need_env:
+                return procedure.py_func(*l,env)
+            else:
+                return procedure.py_func(*l)
             # END PROBLEM 2
         except TypeError as err:
             raise SchemeError('incorrect number of arguments: {0}'.format(procedure))
     elif isinstance(procedure, LambdaProcedure):
         # BEGIN PROBLEM 9
         "*** YOUR CODE HERE ***"
+        child_frame=procedure.env.make_child_frame(procedure.formals,args)
+        return eval_all(procedure.body,child_frame)
         # END PROBLEM 9
     elif isinstance(procedure, MuProcedure):
         # BEGIN PROBLEM 11
         "*** YOUR CODE HERE ***"
+        child_frame=env.make_child_frame(procedure.formals,args)
+        return eval_all(procedure.body,child_frame)
+        
         # END PROBLEM 11
     else:
         assert False, "Unexpected procedure: {}".format(procedure)
@@ -79,7 +104,13 @@ def eval_all(expressions, env):
     2
     """
     # BEGIN PROBLEM 6
-    return scheme_eval(expressions.first, env) # replace this with lines of your own code
+    cur=expressions
+    last=None
+    while cur:
+        last=scheme_eval(cur.first,env)
+        cur=cur.rest
+    return last
+        
     # END PROBLEM 6
 
 
