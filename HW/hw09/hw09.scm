@@ -1,6 +1,6 @@
 (define (curry-cook formals body) (
       if(null? (cdr formals)) (  list 'lambda  formals body )
-      (list 'lambda   (list(car formals) )   (curry-cook  (cdr formals) body) )
+      `( lambda   ,(list(car formals) )   ,(curry-cook  (cdr formals) body) )
 )
 )
 

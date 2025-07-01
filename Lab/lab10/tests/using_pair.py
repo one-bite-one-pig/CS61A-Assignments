@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': '444b726568312f6761d05afbc3ef8701',
+          'answer': "Pair('+', Pair(Pair('-', Pair(2, Pair(4, nil))), Pair(6, Pair(8, nil))))",
           'choices': [
             "Pair('+', Pair('-', Pair(2, Pair(4, Pair(6, Pair(8, nil))))))",
             "Pair('+', Pair(Pair('-', Pair(2, Pair(4))), Pair(6, Pair(8))))",
@@ -14,12 +14,12 @@ test = {
             'None of these'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'multiline': False,
           'question': 'Write out the Python expression that returns a `Pair` representing the given expression: (+ (- 2 4) 6 8)'
         },
         {
-          'answer': '37670e4b00633084aa22d884c6c9326d',
+          'answer': '+',
           'choices': [
             '-',
             '+',
@@ -29,7 +29,7 @@ test = {
             'None of these'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'multiline': False,
           'question': "What is the operator of the previous part's call expression?"
         },
