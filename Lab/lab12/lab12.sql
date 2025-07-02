@@ -25,14 +25,14 @@ CREATE TABLE sizes AS
   SELECT "Soda 320"   , 30;
 
 CREATE TABLE sharing AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT a.course ,count(distinct a.hall)  from  finals as a, finals as b where a.hall=b.hall and a.course<> b.course group by a.course;
 
 CREATE TABLE pairs AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT  a.room||" and " ||b.room||" together have "||(a.seats+b.seats)||" seats"         as rooms  from  sizes as a, sizes as b where a.room<b.room and (a.seats+b.seats)>=1000 order by (a.seats+b.seats)  DESC;
 
 CREATE TABLE big AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT  course   as course  from finals,sizes where room=hall  group by course having sum(seats)>=1000;  
 
 CREATE TABLE remaining AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT  course as course,      sum(seats)-max(seats ) as remaining    from finals ,sizes where room =hall group by course ;
 
