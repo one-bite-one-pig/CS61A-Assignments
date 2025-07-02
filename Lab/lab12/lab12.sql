@@ -18,11 +18,13 @@ CREATE TABLE sizes AS
   SELECT "Wheeler"    , 700             UNION
   SELECT "Pimentel"   , 500             UNION
   SELECT "Li Ka Shing", 300             UNION
-  SELECT "Stanley"    , 300             UNION
+  SELECT "Stanley"    , 300             UNION  
   SELECT "Morgan"     , 100             UNION
   SELECT "Soda 306"   , 80              UNION
   SELECT "Soda 310"   , 40              UNION
   SELECT "Soda 320"   , 30;
+
+
 
 CREATE TABLE sharing AS
   SELECT a.course ,count(distinct a.hall)  from  finals as a, finals as b where a.hall=b.hall and a.course<> b.course group by a.course;
